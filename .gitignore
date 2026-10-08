@@ -12,3 +12,8 @@ testDataDynamic/
 out/
 publish.gradle
 pluginVerifierBin/
+
+CLAUDE.md
+
+.intellijPlatform/
+.kotlin/

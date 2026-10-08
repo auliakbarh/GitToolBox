@@ -1,0 +1,3 @@
+<idea-plugin>
+    <!-- makes Tasks plugin classes visible to GitToolBox when the plugin is present -->
+</idea-plugin>

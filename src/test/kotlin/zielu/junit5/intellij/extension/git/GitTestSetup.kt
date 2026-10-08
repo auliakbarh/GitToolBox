@@ -6,7 +6,6 @@ import java.nio.file.Path
 internal interface GitTestSetup {
   fun getRootPath(): Path
 
-  @JvmDefault
   fun isBare(): Boolean = false
 
   @Throws(Exception::class)

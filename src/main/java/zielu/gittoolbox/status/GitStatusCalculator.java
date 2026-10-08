@@ -84,8 +84,6 @@ public class GitStatusCalculator {
     GitCommandResult result = Git.getInstance().runCommandWithoutCollectingOutput(handler);
     if (result.success()) {
       return GitAheadBehindCount.success(counter.ahead(), counter.aheadTop(), counter.behind(), counter.behindTop());
-    } else if (result.cancelled()) {
-      return GitAheadBehindCount.cancel();
     } else {
       log.warn("Ahead/behind count failed:\n" + result.getErrorOutputAsJoinedString());
       return GitAheadBehindCount.failure();

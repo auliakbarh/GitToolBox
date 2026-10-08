@@ -10,7 +10,7 @@ internal object GitmojiResBundle : DynamicBundle(BUNDLE_NAME) {
   }
 
   fun keySet(): Set<String> {
-    return resourceBundle.keySet()
+    return getBundle(BUNDLE_NAME, GitmojiResBundle::class.java).keySet()
   }
 }
 

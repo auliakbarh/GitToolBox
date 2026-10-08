@@ -8,9 +8,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.AnActionButton
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.TreeExpandCollapse
-import com.intellij.ui.layout.CCFlags
-import com.intellij.ui.layout.LCFlags
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.treeStructure.Tree
 import git4idea.repo.GitRepository
 import zielu.gittoolbox.ResBundle
@@ -76,10 +75,10 @@ internal class AutoFetchExclusionsForm : GtFormUi, GtFormUiEx<MutableConfig> {
 
     val decoratorPanel = decorator.createPanel()
 
-    panel = panel(LCFlags.fillX) {
-      titledRow(ResBundle.message("configurable.prj.autoFetch.exclusions.label")) {
+    panel = panel {
+      group(ResBundle.message("configurable.prj.autoFetch.exclusions.label")) {
         row {
-          decoratorPanel(CCFlags.growX)
+          cell(decoratorPanel).align(AlignX.FILL)
         }
       }
     }

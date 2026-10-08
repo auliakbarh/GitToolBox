@@ -4,8 +4,11 @@ import com.intellij.openapi.observable.properties.AtomicBooleanProperty
 import com.intellij.openapi.observable.properties.AtomicLazyProperty
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Disposer
-import com.intellij.ui.layout.CCFlags
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.bindIntValue
+import com.intellij.ui.dsl.builder.bindSelected
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.execution.ParametersListUtil
 import zielu.gittoolbox.ResBundle
 import zielu.gittoolbox.branch.OutdatedBranchCleanupParams
@@ -36,35 +39,22 @@ internal class BranchPage : GtFormUiEx<MutableConfig> {
 
   override fun init() {
     panel = panel {
-      titledRow(ResBundle.message("configurable.shared.branchCleanup.section.title")) {
+      group(ResBundle.message("configurable.shared.branchCleanup.section.title")) {
         row {
-          checkBox(
-            ResBundle.message("configurable.shared.branchCleanup.autoCleanupEnabled.label"),
-            outdatedAutoCleanupEnabled::get,
-            outdatedAutoCleanupEnabled::set
-          )
-          cell {
-            spinner(
-              outdatedAutoCleanupInterval::get,
-              outdatedAutoCleanupInterval::set,
-              OutdatedBranchCleanupParams.INTERVAL_MIN_HOURS,
-              OutdatedBranchCleanupParams.INTERVAL_MAX_HOURS
-            )
-            label(ResBundle.message("configurable.shared.branchCleanup.autoCleanupUnits.label"))
-          }
+          checkBox(ResBundle.message("configurable.shared.branchCleanup.autoCleanupEnabled.label"))
+            .bindSelected(outdatedAutoCleanupEnabled::get, outdatedAutoCleanupEnabled::set)
+          spinner(
+            OutdatedBranchCleanupParams.INTERVAL_MIN_HOURS..OutdatedBranchCleanupParams.INTERVAL_MAX_HOURS
+          ).bindIntValue(outdatedAutoCleanupInterval::get, outdatedAutoCleanupInterval::set)
+          label(ResBundle.message("configurable.shared.branchCleanup.autoCleanupUnits.label"))
         }
         row(ResBundle.message("configurable.shared.branchCleanup.exclusions.label")) {
           expandableTextField(
-            outdatedCleanupExcludedBranches::get,
-            outdatedCleanupExcludedBranches::set,
             ParametersListUtil.COLON_LINE_PARSER,
             ParametersListUtil.COLON_LINE_JOINER
-          ).constraints(
-            CCFlags.growX
-          ).comment(
-            ResBundle.message("configurable.shared.branchCleanup.exclusions.comment"),
-            140
-          )
+          ).bindText(outdatedCleanupExcludedBranches::get, outdatedCleanupExcludedBranches::set)
+            .align(AlignX.FILL)
+            .comment(ResBundle.message("configurable.shared.branchCleanup.exclusions.comment"), 140)
         }
       }
     }

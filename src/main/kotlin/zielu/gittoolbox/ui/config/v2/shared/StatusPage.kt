@@ -8,8 +8,11 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBTextField
-import com.intellij.ui.layout.panel
-import com.intellij.ui.layout.selectedValueMatches
+import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.bindItem
+import com.intellij.ui.dsl.builder.bindSelected
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import zielu.gittoolbox.ResBundle
 import zielu.gittoolbox.config.MutableConfig
 import zielu.gittoolbox.config.ReferencePointForStatusType
@@ -44,28 +47,20 @@ internal class StatusPage : GtFormUiEx<MutableConfig> {
 
   override fun init() {
     panel = panel {
-      row {
-        label(ResBundle.message("configurable.prj.parentBranch.label"))
-        cell {
-          referencePointComboBox = comboBox(
-            CollectionComboBoxModel(ReferencePointForStatusType.allValues()),
-            referencePointForStatus::get,
-            { referencePointForStatus.set(it!!) },
-            ReferencePointForStatusTypeRenderer()
-          ).component
-          referencePointNameTextField = textField(
-            referencePointName::get,
-            { referencePointName.set(it) }
-          ).component
-        }
-        right {
-          referencePointOverrideCheckBox = checkBox(
-            ResBundle.message("common.override"),
-            referencePointOverride::get,
-            referencePointOverride::set
-          ).component
-          overrideCheckBoxes.register(referencePointOverrideCheckBox)
-        }
+      row(ResBundle.message("configurable.prj.parentBranch.label")) {
+        referencePointComboBox = comboBox(
+          CollectionComboBoxModel(ReferencePointForStatusType.allValues()),
+          ReferencePointForStatusTypeRenderer()
+        ).bindItem({ referencePointForStatus.get() }, { referencePointForStatus.set(it!!) }).component
+        referencePointNameTextField = textField()
+          .bindText(referencePointName::get, { referencePointName.set(it) })
+          .resizableColumn()
+          .component
+        referencePointOverrideCheckBox = checkBox(ResBundle.message("common.override"))
+          .bindSelected(referencePointOverride::get, referencePointOverride::set)
+          .align(AlignX.RIGHT)
+          .component
+        overrideCheckBoxes.register(referencePointOverrideCheckBox)
       }
     }
     overrideCheckBoxes.hide()
@@ -75,9 +70,8 @@ internal class StatusPage : GtFormUiEx<MutableConfig> {
   }
 
   private fun updateUi() {
-    referencePointNameTextField.isEnabled = referencePointComboBox.selectedValueMatches {
-      ReferencePointForStatusType.SELECTED_PARENT_BRANCH == it
-    }.invoke()
+    referencePointNameTextField.isEnabled =
+      referencePointComboBox.selectedItem == ReferencePointForStatusType.SELECTED_PARENT_BRANCH
   }
 
   private fun updateOverrideUi() {

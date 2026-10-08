@@ -2,7 +2,7 @@ package zielu.intellij.guava
 
 import com.google.common.cache.CacheLoader
 
-internal abstract class ThreadLocalCacheLoader<C, K, V> : CacheLoader<K, V>() {
+internal abstract class ThreadLocalCacheLoader<C, K : Any, V : Any> : CacheLoader<K, V>() {
   private val contextStore = ThreadLocal<C>()
 
   fun setContext(context: C) {

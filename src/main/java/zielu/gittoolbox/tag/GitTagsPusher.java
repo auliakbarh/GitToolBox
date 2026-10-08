@@ -80,8 +80,6 @@ public class GitTagsPusher {
   private GtPushResult translate(GitCommandResult result) {
     if (result.success()) {
       return GtPushResult.success();
-    } else if (result.cancelled()) {
-      return GtPushResult.cancelled();
     } else {
       return GtPushResult.error(result.getErrorOutputAsJoinedString());
     }

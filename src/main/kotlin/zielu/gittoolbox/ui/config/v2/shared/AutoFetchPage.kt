@@ -6,8 +6,10 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBIntSpinner
 import com.intellij.ui.components.JBCheckBox
-import com.intellij.ui.layout.CCFlags
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.bindIntValue
+import com.intellij.ui.dsl.builder.bindSelected
+import com.intellij.ui.dsl.builder.panel
 import zielu.gittoolbox.ResBundle
 import zielu.gittoolbox.config.MutableConfig
 import zielu.gittoolbox.fetch.AutoFetchParams
@@ -51,47 +53,33 @@ internal class AutoFetchPage : GtFormUiEx<MutableConfig> {
 
     panel = panel {
       row {
-        autoFetchCheckBox = checkBox(
-          ResBundle.message("configurable.app.autoFetchEnabled.label"),
-          autoFetchEnabled::get,
-          autoFetchEnabled::set
-        ).component
-        cell {
-          autoFetchIntervalSpinner = spinner(
-            autoFetchInterval::get,
-            autoFetchInterval::set,
-            AutoFetchParams.INTERVAL_MIN_MINUTES,
-            AutoFetchParams.INTERVAL_MAX_MINUTES
-          ).component
-          label(ResBundle.message("configurable.app.autoFetchUnits.label"))
-        }
-        right {
-          autoFetchTimingOverrideCheckbox = checkBox(
-            ResBundle.message("common.override"),
-            autoFetchOverride::get,
-            autoFetchOverride::set
-          ).component
-          overrideCheckBoxes.register(autoFetchTimingOverrideCheckbox)
-        }
+        autoFetchCheckBox = checkBox(ResBundle.message("configurable.app.autoFetchEnabled.label"))
+          .bindSelected(autoFetchEnabled::get, autoFetchEnabled::set)
+          .component
+        autoFetchIntervalSpinner = spinner(
+          AutoFetchParams.INTERVAL_MIN_MINUTES..AutoFetchParams.INTERVAL_MAX_MINUTES
+        ).bindIntValue(autoFetchInterval::get, autoFetchInterval::set).component
+        label(ResBundle.message("configurable.app.autoFetchUnits.label")).resizableColumn()
+        autoFetchTimingOverrideCheckbox = checkBox(ResBundle.message("common.override"))
+          .bindSelected(autoFetchOverride::get, autoFetchOverride::set)
+          .align(AlignX.RIGHT)
+          .component
+        overrideCheckBoxes.register(autoFetchTimingOverrideCheckbox)
       }
       row {
         autoFetchOnBranchSwitchCheckbox = checkBox(
-          ResBundle.message("configurable.app.autoFetchOnBranchSwitchEnabled.label"),
-          autoFetchOnBranchSwitch::get,
-          autoFetchOnBranchSwitch::set
-        ).component
-        right {
-          autoFetchOnBranchSwitchOverrideCheckbox = checkBox(
-            ResBundle.message("common.override"),
-            autoFetchOnBranchSwitchOverride::get,
-            autoFetchOnBranchSwitchOverride::set
-
-          ).component
-          overrideCheckBoxes.register(autoFetchOnBranchSwitchOverrideCheckbox)
-        }
+          ResBundle.message("configurable.app.autoFetchOnBranchSwitchEnabled.label")
+        ).bindSelected(autoFetchOnBranchSwitch::get, autoFetchOnBranchSwitch::set)
+          .resizableColumn()
+          .component
+        autoFetchOnBranchSwitchOverrideCheckbox = checkBox(ResBundle.message("common.override"))
+          .bindSelected(autoFetchOnBranchSwitchOverride::get, autoFetchOnBranchSwitchOverride::set)
+          .align(AlignX.RIGHT)
+          .component
+        overrideCheckBoxes.register(autoFetchOnBranchSwitchOverrideCheckbox)
       }
       row {
-        exclusionsPanel(CCFlags.growX)
+        cell(exclusionsPanel).align(AlignX.FILL)
       }
     }
     overrideCheckBoxes.hide()

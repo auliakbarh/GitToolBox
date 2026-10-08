@@ -6,10 +6,10 @@ import zielu.gittoolbox.ResBundle
 import java.util.EnumSet
 
 internal enum class AuthorNameType(private val labelSupplier: () -> String) {
-  INITIALS(ShortNameType.INITIALS::getDescription),
-  LASTNAME(ShortNameType.LASTNAME::getDescription),
-  FIRSTNAME(ShortNameType.FIRSTNAME::getDescription),
-  FULL(ShortNameType.NONE::getDescription),
+  INITIALS({ ShortNameType.INITIALS.description }),
+  LASTNAME({ ShortNameType.LASTNAME.description }),
+  FIRSTNAME({ ShortNameType.FIRSTNAME.description }),
+  FULL({ ShortNameType.NONE.description }),
   EMAIL({ ResBundle.message("author.name.type.email") }),
   EMAIL_USER({ ResBundle.message("author.name.type.email.user") }),
   HIDDEN({ ResBundle.message("author.name.type.hidden") })

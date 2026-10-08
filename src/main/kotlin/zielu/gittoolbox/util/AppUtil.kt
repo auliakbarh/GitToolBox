@@ -13,23 +13,23 @@ internal object AppUtil {
   private val log = Logger.getInstance(AppUtil::class.java)
 
   @JvmStatic
-  fun <T> getExistingServiceInstance(project: Project, serviceType: Class<T>): Optional<T> {
+  fun <T : Any> getExistingServiceInstance(project: Project, serviceType: Class<T>): Optional<T> {
     return Optional.ofNullable(project.getServiceIfCreated(serviceType))
   }
 
   @JvmStatic
-  fun <T> getExistingServiceInstance(serviceType: Class<T>): Optional<T> {
+  fun <T : Any> getExistingServiceInstance(serviceType: Class<T>): Optional<T> {
     return Optional.ofNullable(ApplicationManager.getApplication().getServiceIfCreated(serviceType))
   }
 
   @JvmStatic
-  fun <T> getServiceInstance(project: Project, serviceType: Class<T>): T {
+  fun <T : Any> getServiceInstance(project: Project, serviceType: Class<T>): T {
     return project.getService(serviceType)
       ?: throw IllegalStateException("Service ${serviceType.name} not found")
   }
 
   @JvmStatic
-  fun <T> getServiceInstanceSafe(project: Project, serviceType: Class<T>): Optional<T> {
+  fun <T : Any> getServiceInstanceSafe(project: Project, serviceType: Class<T>): Optional<T> {
     return if (project.isDisposed) {
       Optional.empty()
     } else {
@@ -38,13 +38,13 @@ internal object AppUtil {
   }
 
   @JvmStatic
-  fun <T> getServiceInstance(serviceType: Class<T>): T {
+  fun <T : Any> getServiceInstance(serviceType: Class<T>): T {
     return ApplicationManager.getApplication().getService(serviceType)
       ?: throw IllegalStateException("Service ${serviceType.name} not found")
   }
 
   @JvmStatic
-  fun <T> getServiceInstanceSafe(serviceType: Class<T>): Optional<T> {
+  fun <T : Any> getServiceInstanceSafe(serviceType: Class<T>): Optional<T> {
     return Optional.ofNullable(ApplicationManager.getApplication().getService(serviceType))
   }
 

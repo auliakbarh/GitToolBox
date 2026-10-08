@@ -5,11 +5,6 @@
       <viewModuleNodeParent moduleNodeClass="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
     </extensions>
 
-    <applicationListeners>
-      <listener class="zielu.gittoolbox.fetch.AutoFetchAllowedBuildListener"
-                topic="com.intellij.compiler.server.BuildManagerListener" />
-    </applicationListeners>
-
     <extensions defaultExtensionNs="com.intellij">
       <projectService serviceImplementation="zielu.gittoolbox.fetch.AutoFetchAllowedBuild" />
     </extensions>

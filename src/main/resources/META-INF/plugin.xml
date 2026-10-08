@@ -1,7 +1,7 @@
 <idea-plugin url="https://github.com/zielu/GitToolBox">
   <id>zielu.gittoolbox</id>
   <name>GitToolBox</name>
-  <version>203.0.0-dev</version>
+  <version>263.0.0-dev</version>
   <vendor url="https://github.com/zielu">Lukasz Zielinski</vendor>
 
   <description><![CDATA[
@@ -19,10 +19,11 @@
        on how to target different products -->
   <!-- enable plugins in all products -->
   <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.vcs</depends>
   <depends>Git4Idea</depends>
   <depends optional="true" config-file="java-features.xml">com.intellij.modules.java</depends>
+  <depends optional="true" config-file="tasks-features.xml">com.intellij.tasks</depends>
   <depends optional="true" config-file="gitextender-features.xml">gr.jchrist.gitextender</depends>
-  <depends optional="true" config-file="android-features.xml">org.jetbrains.android</depends>
   <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
   <idea-version since-build="203.5981" until-build="211.*" />
 
@@ -51,18 +52,6 @@
     <applicationService serviceImplementation="zielu.gittoolbox.ui.StatusMessagesService" />
     <applicationService serviceInterface="zielu.gittoolbox.ui.StatusMessagesUi"
                         serviceImplementation="zielu.gittoolbox.ui.StatusMessagesUiService" />
-
-    <!-- legacy config pages -->
-    <applicationConfigurable provider="zielu.gittoolbox.ui.config.v1.AppV1ConfigurableProvider"
-                             id="zielu.gittoolbox.app.config"
-                             bundle="zielu.gittoolbox.ResourceBundle"
-                             key="configurable.app.displayName"
-    />
-    <projectConfigurable provider="zielu.gittoolbox.ui.config.v1.PrjV1ConfigurableProvider"
-                          id="zielu.gittoolbox.prj.config"
-                          bundle="zielu.gittoolbox.ResourceBundle"
-                          key="configurable.prj.displayName"
-    />
 
     <!-- new config pages -->
     <applicationConfigurable provider="zielu.gittoolbox.ui.config.v2.app.AppConfigurableProvider"
@@ -163,8 +152,10 @@
 
     <webHelpProvider implementation="zielu.gittoolbox.help.GithubWikiHelpProvider" />
 
-    <statusBarWidgetFactory implementation="zielu.gittoolbox.ui.statusbar.GitStatStatusBarWidgetFactory" />
-    <statusBarWidgetFactory implementation="zielu.gittoolbox.ui.statusbar.BlameStatusBarWidgetFactory" />
+    <statusBarWidgetFactory id="zielu.gittoolbox.zielu.gittoolbox.ui.statusbar.GitStatusWidget"
+                            implementation="zielu.gittoolbox.ui.statusbar.GitStatStatusBarWidgetFactory" />
+    <statusBarWidgetFactory id="zielu.gittoolbox.zielu.gittoolbox.ui.statusbar.BlameStatusWidget"
+                            implementation="zielu.gittoolbox.ui.statusbar.BlameStatusBarWidgetFactory" />
 
     <projectService serviceImplementation="zielu.gittoolbox.branch.OutdatedBranchesService" />
     <projectService serviceImplementation="zielu.gittoolbox.branch.OutdatedBranchesSchedulerService" />

@@ -1,7 +1,7 @@
 package zielu.junit5.intellij.extension.platform;
 
 import com.intellij.testFramework.EdtTestUtil;
-import com.intellij.testFramework.TestRunnerUtil;
+import com.intellij.testFramework.UITestUtil;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +20,7 @@ class TestCaseJUnit5Adapter {
   void initialize(ExtensionContext context) throws Exception {
     adapted.setTestName(getTestName(context));
     if (adapted.runInEdt()) {
-      TestRunnerUtil.replaceIdeEventQueueSafely();
+      UITestUtil.replaceIdeEventQueueSafely();
       EdtTestUtil.runInEdtAndWait(adapted::doSetUp);
     } else {
       adapted.doSetUp();

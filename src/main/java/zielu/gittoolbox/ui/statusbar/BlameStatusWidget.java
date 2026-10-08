@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -29,7 +30,8 @@ import zielu.gittoolbox.revision.RevisionInfo;
 import zielu.gittoolbox.ui.blame.BlameUi;
 import zielu.gittoolbox.ui.util.AppUiUtil;
 
-class BlameStatusWidget extends EditorBasedWidget implements StatusBarUi, StatusBarWidget.TextPresentation {
+class BlameStatusWidget extends EditorBasedWidget implements StatusBarUi, FileEditorManagerListener,
+    StatusBarWidget.TextPresentation {
   public static final String ID = GitToolBox.PLUGIN_ID + "." + BlameStatusWidget.class.getName();
 
   private final Logger log = Logger.getInstance(getClass());
@@ -203,6 +205,7 @@ class BlameStatusWidget extends EditorBasedWidget implements StatusBarUi, Status
   @Override
   public void install(@NotNull StatusBar statusBar) {
     super.install(statusBar);
+    myConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
     initialize();
     updateVisibleFromConfig();
   }

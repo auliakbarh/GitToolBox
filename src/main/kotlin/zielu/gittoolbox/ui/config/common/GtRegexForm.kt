@@ -2,7 +2,9 @@ package zielu.gittoolbox.ui.config.common
 
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Disposer
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.Align
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import zielu.gittoolbox.ResBundle.message
 import zielu.gittoolbox.ResIcons
 import zielu.gittoolbox.formatter.RegExpFormatter
@@ -27,23 +29,16 @@ internal class GtRegexForm : GtFormUiEx<GtPatternFormatterData> {
     Disposer.register(this, regexTextField)
 
     panel = panel {
-      row {
-        label(message("commit.dialog.completion.pattern.label"))
-        regexTextField()
-        right {
-          patternStatus = label("").component
-        }
+      row(message("commit.dialog.completion.pattern.label")) {
+        cell(regexTextField).align(Align.FILL).resizableColumn()
+        patternStatus = label("").component
       }
-      row {
-        label(message("commit.dialog.completion.pattern.input.label"))
-        textField(this@GtRegexForm::inputValue)
+      row(message("commit.dialog.completion.pattern.input.label")) {
+        textField().bindText(this@GtRegexForm::inputValue).align(Align.FILL)
       }
-      row {
-        label(message("commit.dialog.completion.pattern.output.label"))
-        textField(this@GtRegexForm::outputValue)
-        right {
-          outputStatus = label("").component
-        }
+      row(message("commit.dialog.completion.pattern.output.label")) {
+        textField().bindText(this@GtRegexForm::outputValue).align(Align.FILL).resizableColumn()
+        outputStatus = label("").component
       }
     }
 

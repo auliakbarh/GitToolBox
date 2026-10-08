@@ -25,7 +25,7 @@ internal class DatePresenterTest {
   fun beforeEach() {
     datePresenter = DatePresenterImpl(mockFacade)
     every { mockFacade.getClock() } returns Clock.systemDefaultZone()
-    every { mockFacade.getAbsoluteDateTimeFormat() } returns AbsoluteDateTimeStyle.FROM_LOCALE.format
+    every { mockFacade.getAbsoluteDateTimeFormat() } returns AbsoluteDateTimeStyle.ISO_8601.format
   }
 
   @Test

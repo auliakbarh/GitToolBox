@@ -5,6 +5,7 @@ import static zielu.gittoolbox.cache.PerRepoInfoCache.CACHE_CHANGE_TOPIC;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -29,7 +30,7 @@ import zielu.gittoolbox.config.AppConfigNotifier;
 import zielu.gittoolbox.ui.ExtendedRepoInfo;
 import zielu.gittoolbox.ui.util.AppUiUtil;
 
-public class GitStatusWidget extends EditorBasedWidget implements StatusBarUi,
+public class GitStatusWidget extends EditorBasedWidget implements StatusBarUi, FileEditorManagerListener,
     StatusBarWidget.Multiframe, StatusBarWidget.MultipleTextValuesPresentation {
 
   public static final String ID = GitToolBox.PLUGIN_ID + "." + GitStatusWidget.class.getName();
@@ -174,6 +175,7 @@ public class GitStatusWidget extends EditorBasedWidget implements StatusBarUi,
   @Override
   public void install(@NotNull StatusBar statusBar) {
     super.install(statusBar);
+    myConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
     initialize();
     updateVisibleFromConfig();
   }

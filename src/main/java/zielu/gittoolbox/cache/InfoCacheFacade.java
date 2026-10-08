@@ -88,7 +88,13 @@ class InfoCacheFacade {
   }
 
   private Optional<GitRemoteBranch> getRemoteBranchFromActiveTask(@NotNull GitRepository repository) {
-    TaskManager manager = TaskManager.getManager(project);
+    TaskManager manager;
+    try {
+      manager = TaskManager.getManager(project);
+    } catch (LinkageError e) {
+      // Tasks plugin not available
+      return Optional.empty();
+    }
     if (manager == null) {
       return Optional.empty();
     }

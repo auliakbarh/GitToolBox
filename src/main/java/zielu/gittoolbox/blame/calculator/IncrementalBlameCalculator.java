@@ -54,7 +54,7 @@ public class IncrementalBlameCalculator implements BlameCalculator {
         log.trace("Blame for " + file + " is:\n" + dumpBlame(lineInfos));
       }
       return new BlameRevisionDataProvider(lineInfos, file, revision);
-    } else if (!result.cancelled()) {
+    } else {
       log.warn("Blame failed:\n" + result.getErrorOutputAsJoinedString());
     }
     return null;

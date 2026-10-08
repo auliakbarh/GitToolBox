@@ -5,7 +5,9 @@ import com.intellij.openapi.observable.properties.AtomicLazyProperty
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.SimpleListCellRenderer
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.bindItem
+import com.intellij.ui.dsl.builder.bindSelected
+import com.intellij.ui.dsl.builder.panel
 import zielu.gittoolbox.ResBundle
 import zielu.gittoolbox.config.AuthorNameType
 import zielu.gittoolbox.config.DateType
@@ -36,50 +38,31 @@ internal class BlamePage : GtFormUiEx<MutableConfig> {
     val authorNameRenderer: ListCellRenderer<AuthorNameType?> = SimpleListCellRenderer.create("") {
       it?.getDisplayLabel()
     }
+    val dateRenderer: ListCellRenderer<DateType?> = SimpleListCellRenderer.create("") {
+      it?.getDisplayLabel()
+    }
     panel = panel {
-      titledRow(ResBundle.message("configurable.app.editorInlineBlame.label")) {
+      group(ResBundle.message("configurable.app.editorInlineBlame.label")) {
         row(ResBundle.message("configurable.app.blameAuthorName")) {
-          comboBox(
-            CollectionComboBoxModel(AuthorNameType.allValues),
-            inlineAuthorNameType::get,
-            { inlineAuthorNameType.set(it!!) },
-            authorNameRenderer
-          )
+          comboBox(CollectionComboBoxModel(AuthorNameType.allValues), authorNameRenderer)
+            .bindItem(inlineAuthorNameType)
         }
         row(ResBundle.message("configurable.app.blameDateType")) {
-          val renderer: ListCellRenderer<DateType?> = SimpleListCellRenderer.create("") {
-            it?.getDisplayLabel()
-          }
-          comboBox(
-            CollectionComboBoxModel(DateType.allValues),
-            inlineDateType::get,
-            { inlineDateType.set(it!!) },
-            renderer
-          )
+          comboBox(CollectionComboBoxModel(DateType.allValues), dateRenderer)
+            .bindItem(inlineDateType)
         }
         row {
-          checkBox(
-            ResBundle.message("configurable.app.blameSubject"),
-            inlineShowSubject::get,
-            { inlineShowSubject.set(it) }
-          )
+          checkBox(ResBundle.message("configurable.app.blameSubject")).bindSelected(inlineShowSubject)
         }
         row {
-          checkBox(
-            ResBundle.message("configurable.app.alwaysShowInlineBlameWhileDebugging.label"),
-            inlineAlwaysShowBlameWhileDebugging::get,
-            { inlineAlwaysShowBlameWhileDebugging.set(it) }
-          )
+          checkBox(ResBundle.message("configurable.app.alwaysShowInlineBlameWhileDebugging.label"))
+            .bindSelected(inlineAlwaysShowBlameWhileDebugging)
         }
       }
-      titledRow(ResBundle.message("configurable.app.statusBlame.label")) {
+      group(ResBundle.message("configurable.app.statusBlame.label")) {
         row(ResBundle.message("configurable.app.blameAuthorName")) {
-          comboBox(
-            CollectionComboBoxModel(AuthorNameType.allValues),
-            statusAuthorNameType::get,
-            { statusAuthorNameType.set(it!!) },
-            authorNameRenderer
-          )
+          comboBox(CollectionComboBoxModel(AuthorNameType.allValues), authorNameRenderer)
+            .bindItem(statusAuthorNameType)
         }
       }
     }

@@ -12,10 +12,13 @@ import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBTextField
-import com.intellij.ui.layout.CCFlags
-import com.intellij.ui.layout.Row
-import com.intellij.ui.layout.panel
-import org.jdesktop.swingx.action.AbstractActionExt
+import com.intellij.ui.dsl.builder.Align
+import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.Row
+import com.intellij.ui.dsl.builder.bindItem
+import com.intellij.ui.dsl.builder.bindSelected
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import zielu.gittoolbox.ResBundle.message
 import zielu.gittoolbox.completion.FormatterIcons
 import zielu.gittoolbox.config.CommitCompletionConfig
@@ -35,6 +38,7 @@ import zielu.gittoolbox.ui.util.ListDataAnyChangeAdapter
 import zielu.intellij.ui.GtFormUiEx
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
+import javax.swing.AbstractAction
 import javax.swing.Action
 import javax.swing.DefaultComboBoxModel
 import javax.swing.JComponent
@@ -129,83 +133,60 @@ internal class CommitPage : GtFormUiEx<MutableConfig> {
     panel = panel {
       commitCompletionModeRow = row(message("commit.dialog.completion.mode.label")) {
         val renderer: ListCellRenderer<CommitCompletionMode?> = SimpleListCellRenderer.create("") { it?.displayLabel }
-        comboBox(
-          DefaultComboBoxModel(CommitCompletionMode.values()),
-          commitDialogCompletionMode::get,
-          { commitDialogCompletionMode.set(it!!) },
-          renderer
-        )
+        comboBox(DefaultComboBoxModel(CommitCompletionMode.values()), renderer)
+          .bindItem(commitDialogCompletionMode::get) { commitDialogCompletionMode.set(it!!) }
       }
       row {
-        commitDialogBranchCompletionCheckBox = checkBox(
-          message("commit.dialog.completion.branch.enabled.label"),
-          commitDialogBranchCompletion::get,
-          { commitDialogBranchCompletion.set(it) }
-        ).component
-        right {
-          commitDialogBranchCompletionOverrideCheckBox = checkBox(
-            message("common.override"),
-            commitDialogBranchCompletionOverride::get,
-            commitDialogBranchCompletionOverride::set
-          ).component
-          overrideCheckBoxes.register(commitDialogBranchCompletionOverrideCheckBox)
-        }
+        commitDialogBranchCompletionCheckBox = checkBox(message("commit.dialog.completion.branch.enabled.label"))
+          .bindSelected(commitDialogBranchCompletion::get, commitDialogBranchCompletion::set)
+          .component
+        commitDialogBranchCompletionOverrideCheckBox = checkBox(message("common.override"))
+          .bindSelected(commitDialogBranchCompletionOverride::get, commitDialogBranchCompletionOverride::set)
+          .align(AlignX.RIGHT)
+          .component
+        overrideCheckBoxes.register(commitDialogBranchCompletionOverrideCheckBox)
       }
       row {
-        commitDialogGitmojiCompletionCheckBox = checkBox(
-          message("commit.dialog.completion.gitmoji.enabled.label"),
-          commitDialogGitmojiCompletion::get,
-          { commitDialogGitmojiCompletion.set(it) }
-        ).component
-        right {
-          commitDialogGitmojiCompletionOverrideCheckBox = checkBox(
-            message("common.override"),
-            commitDialogGitmojiCompletionOverride::get,
-            commitDialogGitmojiCompletionOverride::set
-          ).component
-          overrideCheckBoxes.register(commitDialogGitmojiCompletionOverrideCheckBox)
-        }
+        commitDialogGitmojiCompletionCheckBox = checkBox(message("commit.dialog.completion.gitmoji.enabled.label"))
+          .bindSelected(commitDialogGitmojiCompletion::get, commitDialogGitmojiCompletion::set)
+          .component
+        commitDialogGitmojiCompletionOverrideCheckBox = checkBox(message("common.override"))
+          .bindSelected(commitDialogGitmojiCompletionOverride::get, commitDialogGitmojiCompletionOverride::set)
+          .align(AlignX.RIGHT)
+          .component
+        overrideCheckBoxes.register(commitDialogGitmojiCompletionOverrideCheckBox)
+      }
+      indent {
         row {
-          commitDialogGitmojiUnicodeCompletionCheckBox = checkBox(
-            message("commit.dialog.completion.gitmoji.unicode.label"),
-            commitDialogGitmojiUnicodeCompletion::get,
-            { commitDialogGitmojiUnicodeCompletion.set(it) }
-          ).component
+          commitDialogGitmojiUnicodeCompletionCheckBox = checkBox(message("commit.dialog.completion.gitmoji.unicode.label"))
+            .bindSelected(commitDialogGitmojiUnicodeCompletion::get, commitDialogGitmojiUnicodeCompletion::set)
+            .component
         }
       }
       row {
-        cell {
-          commitMessageValidationCheckBox = checkBox(
-            message("commit.message.validation.enabled.label"),
-            commitMessageValidation::get,
-            { commitMessageValidation.set(it) }
-          ).component
-          commitMessageValidationRegexTextField = expandableTextField(
-            commitMessageValidationRegex::get,
-            { commitMessageValidationRegex.set(it) }
-          ).component
-        }
-        right {
-          commitMessageValidationOverrideCheckBox = checkBox(
-            message("common.override"),
-            commitMessageValidationOverride::get,
-            commitMessageValidationOverride::set
-          ).component
-          overrideCheckBoxes.register(commitMessageValidationOverrideCheckBox)
-        }
+        commitMessageValidationCheckBox = checkBox(message("commit.message.validation.enabled.label"))
+          .bindSelected(commitMessageValidation::get, commitMessageValidation::set)
+          .component
+        commitMessageValidationRegexTextField = expandableTextField()
+          .bindText(commitMessageValidationRegex::get) { commitMessageValidationRegex.set(it) }
+          .align(AlignX.FILL)
+          .component
+        commitMessageValidationOverrideCheckBox = checkBox(message("common.override"))
+          .bindSelected(commitMessageValidationOverride::get, commitMessageValidationOverride::set)
+          .align(AlignX.RIGHT)
+          .component
+        overrideCheckBoxes.register(commitMessageValidationOverrideCheckBox)
       }
-      titledRow(message("commit.dialog.completion.formatters.label")) {
+      group(message("commit.dialog.completion.formatters.label"), false) {
         row {
-          commitCompletionFormattersOverrideCheckBox = checkBox(
-            message("common.override"),
-            commitCompletionFormattersOverride::get,
-            commitCompletionFormattersOverride::set
-          ).component
+          commitCompletionFormattersOverrideCheckBox = checkBox(message("common.override"))
+            .bindSelected(commitCompletionFormattersOverride::get, commitCompletionFormattersOverride::set)
+            .component
           overrideCheckBoxes.register(commitCompletionFormattersOverrideCheckBox)
         }
         row {
-          completionFormattersPanel(CCFlags.growX)
-        }
+          cell(completionFormattersPanel).align(Align.FILL)
+        }.resizableRow()
       }
     }
 
@@ -226,12 +207,7 @@ internal class CommitPage : GtFormUiEx<MutableConfig> {
   }
 
   private fun createAddSimpleCompletionAction(): Action {
-    return object : AbstractActionExt() {
-      init {
-        name = message("commit.dialog.completion.formatters.simple.add.label")
-        smallIcon = FormatterIcons.Simple
-      }
-
+    return object : AbstractAction(message("commit.dialog.completion.formatters.simple.add.label"), FormatterIcons.Simple) {
       override fun actionPerformed(e: ActionEvent) {
         commitCompletionFormatters.add(CommitCompletionConfig.createDefault(CommitCompletionType.SIMPLE))
       }
@@ -239,12 +215,7 @@ internal class CommitPage : GtFormUiEx<MutableConfig> {
   }
 
   private fun createAddIssueCompletionAction(): Action {
-    return object : AbstractActionExt() {
-      init {
-        name = message("commit.dialog.completion.formatters.pattern.issue.add.label")
-        smallIcon = FormatterIcons.RegExp
-      }
-
+    return object : AbstractAction(message("commit.dialog.completion.formatters.pattern.issue.add.label"), FormatterIcons.RegExp) {
       override fun actionPerformed(e: ActionEvent) {
         commitCompletionFormatters.add(CommitCompletionConfig.createIssuePattern())
       }
@@ -252,12 +223,7 @@ internal class CommitPage : GtFormUiEx<MutableConfig> {
   }
 
   private fun createAddPatternCompletionAction(): Action {
-    return object : AbstractActionExt() {
-      init {
-        name = message("commit.dialog.completion.formatters.pattern.add.label")
-        smallIcon = FormatterIcons.RegExp
-      }
-
+    return object : AbstractAction(message("commit.dialog.completion.formatters.pattern.add.label"), FormatterIcons.RegExp) {
       override fun actionPerformed(e: ActionEvent) {
         commitCompletionFormatters.add(CommitCompletionConfig.createDefault(CommitCompletionType.PATTERN))
       }
@@ -292,7 +258,7 @@ internal class CommitPage : GtFormUiEx<MutableConfig> {
     uiItems.clear()
 
     if (hasProject) {
-      commitCompletionModeRow.visible = false
+      commitCompletionModeRow.visible(false)
       uiItems.register(
         BoolPropWithOverride(
           commitDialogBranchCompletion,

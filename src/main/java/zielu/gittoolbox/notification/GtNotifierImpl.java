@@ -71,7 +71,7 @@ class GtNotifierImpl implements GtNotifier {
   @NotNull
   @Override
   public Notification autoFetchInfo(@NotNull String title, @NotNull String message) {
-    return notify(VcsNotifier.SILENT_NOTIFICATION, title, message, NotificationType.INFORMATION, null);
+    return notify(VcsNotifier.silentNotification(), title, message, NotificationType.INFORMATION, null);
   }
 
   @Override

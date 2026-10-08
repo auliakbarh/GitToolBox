@@ -6,8 +6,9 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.ex.MultiLineLabel
 import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBLabel
-import com.intellij.ui.layout.LCFlags
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.bindItem
+import com.intellij.ui.dsl.builder.bindSelected
+import com.intellij.ui.dsl.builder.panel
 import zielu.gittoolbox.ResBundle
 import zielu.gittoolbox.config.AbsoluteDateTimeStyle
 import zielu.gittoolbox.config.MutableConfig
@@ -59,97 +60,65 @@ internal class GeneralPage(
     }
 
     val updateActionComment = MultiLineLabel(ResBundle.message("update.project.action.description"))
-    panel = panel(LCFlags.fillX) {
+    panel = panel {
       row(ResBundle.message("configurable.app.presentation.label")) {
         val renderer: ListCellRenderer<StatusPresenter?> = SimpleListCellRenderer.create("") { it?.label }
         val combo = comboBox(
           DefaultComboBoxModel(StatusPresenters.allPresenters()),
-          presentationMode::get,
-          { presentationMode.set(it!!) },
           renderer
-        ).component
+        ).bindItem(presentationMode).component
         combo.addActionListener {
           val presenter = combo.selectedItem as StatusPresenter
           appPages.statusPresenter = presenter
           updatePresentationPreviews(presenter)
         }
       }
-      row(separated = true) {
-        row {
-          label(ResBundle.message("configurable.app.presentation.statusbar.preview"))
-          presentationStatusBarPreview()
-        }
-        row {
-          label(ResBundle.message("configurable.app.presentation.projectView.preview"))
-          presentationProjectViewPreview()
-        }
-        row {
-          label(ResBundle.message("configurable.app.presentation.behindTracker.preview"))
-          presentationBehindTrackerPreview()
-        }
+      separator()
+      row(ResBundle.message("configurable.app.presentation.statusbar.preview")) {
+        cell(presentationStatusBarPreview)
+      }
+      row(ResBundle.message("configurable.app.presentation.projectView.preview")) {
+        cell(presentationProjectViewPreview)
+      }
+      row(ResBundle.message("configurable.app.presentation.behindTracker.preview")) {
+        cell(presentationBehindTrackerPreview)
       }
       row {
-        checkBox(
-          ResBundle.message("configurable.app.showStatusWidget.label"),
-          showStatusWidget::get,
-          showStatusWidget::set
-        )
+        checkBox(ResBundle.message("configurable.app.showStatusWidget.label")).bindSelected(showStatusWidget)
       }
       row {
-        checkBox(
-          ResBundle.message("configurable.app.trackChanges.label"),
-          showChangesInStatusBar::get,
-          showChangesInStatusBar::set
-        )
+        checkBox(ResBundle.message("configurable.app.trackChanges.label")).bindSelected(showChangesInStatusBar)
       }
       row {
-        checkBox(
-          ResBundle.message("configurable.app.showBlame.label"),
-          showBlameWidget::get,
-          showBlameWidget::set
-        )
+        checkBox(ResBundle.message("configurable.app.showBlame.label")).bindSelected(showBlameWidget)
       }
       row {
-        checkBox(
-          ResBundle.message("configurable.app.showEditorInlineBlame.label"),
-          showEditorInlineBlame::get,
-          showEditorInlineBlame::set
-        )
+        checkBox(ResBundle.message("configurable.app.showEditorInlineBlame.label"))
+          .bindSelected(showEditorInlineBlame)
       }
       row {
-        checkBox(
-          ResBundle.message("configurable.app.showProjectViewDecoration.label"),
-          showProjectViewDecoration::get,
-          showProjectViewDecoration::set
-        )
+        checkBox(ResBundle.message("configurable.app.showProjectViewDecoration.label"))
+          .bindSelected(showProjectViewDecoration)
       }
       row {
-        checkBox(
-          ResBundle.message("configurable.app.behindTrackerEnabled.label"),
-          behindTracker::get,
-          behindTracker::set
-        )
+        checkBox(ResBundle.message("configurable.app.behindTrackerEnabled.label")).bindSelected(behindTracker)
       }
       row(ResBundle.message("update.project.action.label")) {
         val values = UpdateProjectActionService.getInstance().getAll()
         val renderer: ListCellRenderer<UpdateProjectAction?> = SimpleListCellRenderer.create("") { it?.getName() }
         comboBox(
           DefaultComboBoxModel(Vector(values)),
-          updateProjectAction::get,
-          { updateProjectAction.set(it!!) },
           renderer
-        )
-        row {
-          updateActionComment()
-        }
+        ).bindItem(updateProjectAction)
+      }
+      row {
+        cell(updateActionComment)
       }
       row(ResBundle.message("configurable.app.absoluteDateTimeStyle.label")) {
         comboBox(
           DefaultComboBoxModel(AbsoluteDateTimeStyle.values()),
-          absoluteDateTypeStyle::get,
-          { absoluteDateTypeStyle.set(it!!) },
           AbsoluteDateTimeStyleRenderer()
-        )
+        ).bindItem(absoluteDateTypeStyle)
       }
     }
   }

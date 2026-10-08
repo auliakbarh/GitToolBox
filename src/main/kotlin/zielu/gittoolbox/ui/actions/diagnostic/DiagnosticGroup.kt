@@ -6,6 +6,10 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import zielu.gittoolbox.GitToolBoxRegistry
 
 internal class DiagnosticGroup : ActionGroup() {
+  init {
+    templatePresentation.isHideGroupIfEmpty = true
+  }
+
   override fun getChildren(e: AnActionEvent?): Array<AnAction> {
     return if (GitToolBoxRegistry.diagnosticMode())
       arrayOf(
@@ -15,6 +19,4 @@ internal class DiagnosticGroup : ActionGroup() {
       arrayOf()
     }
   }
-
-  override fun hideIfNoVisibleChildren(): Boolean = true
 }

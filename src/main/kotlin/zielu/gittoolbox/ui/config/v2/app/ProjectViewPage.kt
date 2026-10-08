@@ -9,11 +9,9 @@ import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.awt.RelativePoint
 import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBTextField
-import com.intellij.ui.layout.CCFlags
-import com.intellij.ui.layout.LCFlags
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.Align
+import com.intellij.ui.dsl.builder.panel
 import jodd.util.StringBand
-import org.jdesktop.swingx.action.AbstractActionExt
 import zielu.gittoolbox.ResBundle
 import zielu.gittoolbox.config.DecorationPartConfig
 import zielu.gittoolbox.config.DecorationPartType
@@ -26,6 +24,7 @@ import zielu.intellij.ui.GtFormUiEx
 import java.awt.Component
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
+import javax.swing.AbstractAction
 import javax.swing.Action
 import javax.swing.BorderFactory
 import javax.swing.JComponent
@@ -83,10 +82,10 @@ internal class ProjectViewPage(
     val postfixTextField = JBTextField()
     val decoratorDetailsPanel = panel {
       row(ResBundle.message("configurable.app.decorationPart.prefix.label")) {
-        prefixTextField()
+        cell(prefixTextField).align(Align.FILL)
       }
       row(ResBundle.message("configurable.app.decorationPart.postfix.label")) {
-        postfixTextField()
+        cell(postfixTextField).align(Align.FILL)
       }
     }
     decoratorDetailsPanel.border = BorderFactory.createEmptyBorder(3, 5, 5, 5)
@@ -94,20 +93,20 @@ internal class ProjectViewPage(
     configPanel.add(decoratorPanel)
     configPanel.add(decoratorDetailsPanel)
 
-    panel = panel(LCFlags.fillX) {
+    panel = panel {
       row {
         label(ResBundle.message("configurable.app.decorationPart.layout.label"))
       }
       row {
-        configPanel(CCFlags.growX)
+        cell(configPanel).align(Align.FILL)
       }
       row(ResBundle.message("configurable.app.decorationPart.layoutPreview.label")) {
-        layoutPreviewTextField()
+        cell(layoutPreviewTextField).align(Align.FILL)
       }
     }
 
     DecorationPartType.getValues().forEach { type: DecorationPartType ->
-      val action: Action = object : AbstractActionExt(type.label) {
+      val action: Action = object : AbstractAction(type.label) {
         override fun actionPerformed(e: ActionEvent) {
           val config = DecorationPartConfig()
           config.type = type

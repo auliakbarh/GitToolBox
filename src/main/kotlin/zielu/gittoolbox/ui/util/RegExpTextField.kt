@@ -3,7 +3,7 @@ package zielu.gittoolbox.ui.util
 import com.intellij.openapi.Disposable
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBTextField
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.StringUtils
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 import javax.swing.event.DocumentEvent

@@ -1,7 +1,7 @@
 package zielu.gittoolbox.ui.config.v2.props
 
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.observable.properties.BooleanProperty
+import com.intellij.openapi.observable.properties.ObservableMutableProperty
 import com.intellij.openapi.util.Disposer
 import zielu.gittoolbox.config.override.BoolValueOverride
 import zielu.intellij.ui.ZOnItemSelectable
@@ -9,8 +9,8 @@ import java.awt.ItemSelectable
 import kotlin.reflect.KMutableProperty0
 
 internal class BoolPropWithOverride(
-  private val valueProperty: BooleanProperty,
-  private val overrideProperty: BooleanProperty,
+  private val valueProperty: ObservableMutableProperty<Boolean>,
+  private val overrideProperty: ObservableMutableProperty<Boolean>,
   private val appValue: KMutableProperty0<Boolean>,
   private val prjValue: BoolValueOverride,
   private val valueUi: (Boolean) -> Unit,

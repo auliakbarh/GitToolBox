@@ -1,6 +1,5 @@
 package zielu.gittoolbox.ui.statusbar;
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.annotations.RequiresEdt;
@@ -51,10 +50,5 @@ public class RootActions extends DefaultActionGroup {
 
   private boolean hasRepositories(Collection<GitRepository> repositories) {
     return !repositories.isEmpty();
-  }
-
-  @Override
-  public boolean canBePerformed(DataContext context) {
-    return true;
   }
 }
